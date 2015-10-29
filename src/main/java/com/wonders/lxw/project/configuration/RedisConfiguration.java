@@ -13,6 +13,8 @@ public class RedisConfiguration {
 
     @Bean
     public StringRedisTemplate redisTemplate(RedisConnectionFactory factory) {
+        System.out.println("factory = [" + factory + "]");
+        System.out.println(factory.getConnection());
         return new StringRedisTemplate(factory);
     }
 

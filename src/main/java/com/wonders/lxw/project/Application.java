@@ -22,9 +22,4 @@ public class Application {
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
-
-    @Bean
-    public StringRedisTemplate redisTemplate(RedisConnectionFactory factory) {
-        return new StringRedisTemplate(factory);
-    }
 }
