@@ -1,7 +1,7 @@
 package com.wonders.lxw.project.service;
 
-import com.wonders.lxw.project.dto.IMClientCertificate;
-import com.wonders.lxw.project.dto.IMToken;
+import com.wonders.lxw.project.dto.im.IMClientCertificate;
+import com.wonders.lxw.project.dto.im.IMToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.*;
@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Collections;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -38,39 +36,29 @@ public class IMService {
         String token = redisTemplate.opsForValue().get("lxw:im:token");
         if (StringUtils.isEmpty(token)) {
             IMClientCertificate certificate = new IMClientCertificate(IM_APP_CLIENT_ID, IM_APP_CLIENT_SECRET);
-            IMToken imToken = restTemplate.postForObject(IM_SER_URL, certificate, IMToken.class,"token");
+            ResponseEntity entity = requestIMChat(null, false, certificate, "POST", "token", IMToken.class);
+            IMToken imToken = (IMToken) entity.getBody();
             redisTemplate.opsForValue().set("lxw:im:token", imToken.getAccess_token(), imToken.getExpires_in(), TimeUnit.DAYS);
         }
         return token;
     }
 
-    //    public ResponseEntity requestIMChat(Map<String, String> headerMap, boolean isNeedToken, Object requestBody, String method, String key, Class<?> responseType) {
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.set("Content-Type", MediaType.APPLICATION_JSON_VALUE);
-//        if (null != headerMap) {
-//            for (Map.Entry<String, String> entry : headerMap.entrySet()) {
-//                System.out.println(entry.getKey() + entry.getValue());
-//            }
-//            headers.setAll(headerMap);
-//        }
-//        if (isNeedToken) {
-//            headers.add("Authorization", "Bearer " + retrieveToken());
-//        }
-//        return restTemplate.exchange(
-//                IM_SER_URL,
-//                Enum.valueOf(HttpMethod.class, method),
-//                new HttpEntity(requestBody, headers),
-//                responseType,
-//                key
-//        );
-//    }
 
+    /**
+     * 获取环信接口的公共类
+     *
+     * @param headers
+     * @param isNeedToken
+     * @param requestBody
+     * @param method
+     * @param key
+     * @param responseType
+     * @return
+     */
     public ResponseEntity requestIMChat(HttpHeaders headers, boolean isNeedToken, Object requestBody, String method, String key, Class<?> responseType) {
-
         if (null == headers) {
             headers = new HttpHeaders();
-            headers.set("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+            headers.setContentType(MediaType.APPLICATION_JSON);
         }
         if (isNeedToken) {
             headers.add("Authorization", "Bearer " + retrieveToken());
@@ -82,5 +70,7 @@ public class IMService {
                 responseType,
                 key
         );
+
+
     }
 }

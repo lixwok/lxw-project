@@ -1,4 +1,4 @@
-package com.wonders.lxw.project.dto;
+package com.wonders.lxw.project.dto.im;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

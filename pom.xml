@@ -16,6 +16,7 @@
     </parent>
 
     <properties>
+        <spring.version>4.2.1.RELEASE</spring.version>
         <start-class>com.wonders.lxw.project.Application</start-class>
     </properties>
 

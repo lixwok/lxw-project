@@ -29,7 +29,7 @@ public class IMServiceTest {
     @Test
     public void testRequestIMChat() throws Exception {
         Map<String, String> userMap = new HashMap();
-        userMap.put("username", "longshao");
+        userMap.put("username", "longshao11");
         userMap.put("password", "123456");
         ResponseEntity responseEntity = imService.requestIMChat(null, false, userMap, "POST", "users", String.class);
         System.out.println(responseEntity.getStatusCode());
